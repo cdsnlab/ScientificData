@@ -1,0 +1,15 @@
+DS_Store
+*.pkl
+*.png
+*.pickle
+*.json
+*.npy
+*.csv
+*.zip
+*.txt
+*.jpg
+
+__pycache__
+graphs/**
+dataset/**
+keys/**
