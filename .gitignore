@@ -8,6 +8,9 @@ DS_Store
 *.zip
 *.txt
 *.jpg
+*.xlsx
+*.code-workspace
+*.pptx
 
 __pycache__
 graphs/**
