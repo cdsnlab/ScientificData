@@ -1,3 +1,4 @@
+import os
 import time
 import json
 import datetime
@@ -22,19 +23,32 @@ def query_sensor_activity(db_info):
         start_ts, end_ts, label, avg_n_human = activity[0], activity[1], activity[2], activity[3]
         
         ''' Query context and action data'''
-        contexts = [(d['timestamp'], d['type'], d['publisher'], d['name'], d['value']) for d in \
+        contexts = [(d['timestamp'], d['publisher'], d['name'], d['value']) for d in \
             sensor_data.find({'timestamp': {'$gt': start_ts, '$lt': end_ts}, 'type': 'context'}).sort('timestamp')]
-        actions = [(d['timestamp'], d['type'], d['publisher'], d['name'], None) for d in \
+        actions = [(d['timestamp'], d['publisher'], d['name'], None) for d in \
             sensor_data.find({'timestamp': {'$gt': start_ts, '$lt': end_ts}, 'type': 'action'}).sort('timestamp')]
 
         ''' Data Processing '''
         sensor_values = sorted(contexts + actions, key=lambda x: x[0])
         # sensor_values = list(map(lambda x: list(x) + [label, avg_n_human], sensor_values))
-        sensor_table = pd.DataFrame(np.array(sensor_values), columns=['timestamp', 'type', 'publisher', 'name', 'value', 'label', 'avg_n_human'])
+        sensor_table = pd.DataFrame(np.array(sensor_values), columns=['timestamp', 'publisher', 'name', 'value'])
+        metadata_header = 'label, start_ts, end_ts, avg_n_human'
+        metadata_content = f'{label}, {start_ts}, {end_ts}, {avg_n_human}'
     
         ''' Save each activity data '''
-        fname = f'data/{label}_{start_ts}.csv'
-        sensor_table.to_csv(fname, sep=',', na_rep='')
+        sensor_dir = 'sensor'
+        metadata_dir = 'metadata'
+        if not os.path.isdir(sensor_dir):
+            os.mkdir(sensor_dir)
+        if not os.path.isdir(metadata_dir):
+            os.mkdir(metadata_dir)
+
+        sensor_fname = f'{sensor_dir}/{label}_{start_ts}.csv'
+        metadata_fname = f'{metadata_dir}/{label}_{start_ts}.txt'
+        sensor_table.to_csv(sensor_fname, sep=',', na_rep='')
+        with open(metadata_fname, 'w') as f:
+            f.write(metadata_header+'\n'+metadata_content)
+            f.close()
 
     client.close()
 

@@ -1,9 +1,6 @@
+import json
 import requests
 
-URL = 'http://143.248.53.238:5000/'
-
-ID = 'admin'
-PW = 'CdsnLab@7759'
 
 RETRIEVE_API = 'webapi/query.cgi?api=SYNO.API.Info&version=1&method=query&query=SYNO.API.Auth,SYNO.FileStation'
 LOGIN_API = 'webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&account={}&passwd={}&session=FileStation&format=cookie'
@@ -72,6 +69,14 @@ def upload(url, sid, path, filepath):
 if __name__ == '__main__':
     test_file = 'C:/Users/cdsnlab/Dropbox/CDSN/Testbed/NAS/3. URP Report_example.jpg'
     seminar_dir = '/volume1/N1SeminarRoom825'
+    json_file = 'old_nas_info.json'
+    with open(json_file, 'r') as f:
+        nas_info = json.load(f)
+    URL = nas_info['url']
+    ID = nas_info['admin']
+    PW = nas_info['pw']
+
+
     code, success = retreive(URL)
     code, success, sid = login(URL, ID, PW)
     code, success, filelist = ls(URL, sid, seminar_dir)
