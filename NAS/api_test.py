@@ -76,7 +76,6 @@ if __name__ == '__main__':
     ID = nas_info['admin']
     PW = nas_info['pw']
 
-
     code, success = retreive(URL)
     code, success, sid = login(URL, ID, PW)
     code, success, filelist = ls(URL, sid, seminar_dir)
