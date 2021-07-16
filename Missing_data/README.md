@@ -30,10 +30,20 @@ MongoDB를 쿼리해서 특정 기간동안 하루단위로 특정 agent 또는 
 
 ### 사용방법 (1)  one_sensor_analysis
 
+* DB 정보가 담긴 json 파일 (`db_info.json`)을 본 폴더안에 넣어준다. 
+
 * 코드 92번째 줄부터 확인하고 싶은 agent에 대한 내용으로 수정을 하면 됩니다. 
+
 * 리턴 값은 각각 다음과 같습니다.
+
   * 시작 시간과 종료 시간 사이 하루간격의 타임스탬프 값을 가지는 numpy array (이후 그래프를 그릴때 x 축의 값으로 이용)
   * 시작 시간과 종료 시간 사이 하루 단위로 agent가 등장한 횟수의 값을 가지는 numpy array 
+
+* 별도의 arugment 없이 코드를 동작시킨다.
+
+  ```bash
+  python one_sensor_analysis.py
+  ```
 
 ```python
 if __name__ == '__main__':
@@ -50,10 +60,20 @@ if __name__ == '__main__':
 
 ### 사용방법 (2)  one_context_analysis
 
+* DB 정보가 담긴 json 파일 (`db_info.json`)을 본 폴더안에 넣어준다. 
+
 * 코드 92번째 줄부터 확인하고 싶은 context에 대한 내용으로 수정을 하면 됩니다. 
+
 * 리턴 값은 각각 다음과 같습니다.
+
   * 시작 시간과 종료 시간 사이 하루간격의 타임스탬프 값을 가지는 numpy array (이후 그래프를 그릴때 x 축의 값으로 이용)
   * 시작 시간과 종료 시간 사이 하루 단위로 context가 등장한 횟수의 값을 가지는 numpy array 
+
+* 별도의 arugment 없이 코드를 동작시킨다.
+
+  ```bash
+  python one_sensor_analysis.py
+  ```
 
 ```python
 if __name__ == '__main__':
