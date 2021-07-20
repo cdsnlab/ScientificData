@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import glob
 import time
@@ -79,31 +80,31 @@ def fileUploader(nas_info, dir, selected, date):
     ''' Close the connection '''
     ssh_manager.close_ssh_client() 
 
-def webcamDataToNASInstant(nas_info, dir):
-    prev_today = None
-    prev_tfiles, prev_yfiles = None, None
-    while True:
-        ''' Find today '''
-        today, yesterday = dateChecker()
-        print(f'Now: {datetime.now()} Today: {today}, Yesterday: {yesterday}')
-        if prev_today != None:
-            if prev_today != today:
-                prev_tfiles, prev_yfiles = [], tfiles
+# def webcamDataToNASInstant(nas_info, dir):
+#     prev_today = None
+#     prev_tfiles, prev_yfiles = None, None
+#     while True:
+#         ''' Find today '''
+#         today, yesterday = dateChecker()
+#         print(f'Now: {datetime.now()} Today: {today}, Yesterday: {yesterday}')
+#         if prev_today != None:
+#             if prev_today != today:
+#                 prev_tfiles, prev_yfiles = [], tfiles
 
-        ''' Find all video files created within today and yesterday '''
-        tfiles, yfiles = fileChecker(today), fileChecker(yesterday)
-        tfiles = tfiles[:-1]
-        if prev_tfiles != None:
-            ''' Select the file to be uploaded'''
-            today_selected, yesterday_selected = fileSelector(tfiles, yfiles, prev_tfiles, prev_yfiles)
-            print(f'selected:\n{today_selected, yesterday_selected}')
+#         ''' Find all video files created within today and yesterday '''
+#         tfiles, yfiles = fileChecker(today), fileChecker(yesterday)
+#         tfiles = tfiles[:-1]
+#         if prev_tfiles != None:
+#             ''' Select the file to be uploaded'''
+#             today_selected, yesterday_selected = fileSelector(tfiles, yfiles, prev_tfiles, prev_yfiles)
+#             print(f'selected:\n{today_selected, yesterday_selected}')
 
-            fileUploader(nas_info, dir, today_selected, today)
-            fileUploader(nas_info, dir, yesterday_selected, yesterday)
-        print('\n--------------------------\n')
-        prev_tfiles, prev_yfiles = tfiles, yfiles
-        prev_today = today
-        time.sleep(300)
+#             fileUploader(nas_info, dir, today_selected, today)
+#             fileUploader(nas_info, dir, yesterday_selected, yesterday)
+#         print('\n--------------------------\n')
+#         prev_tfiles, prev_yfiles = tfiles, yfiles
+#         prev_today = today
+#         time.sleep(300)
 
 def webcamDataToNASDay(nas_info, dir):
     prev_today = None
@@ -114,10 +115,12 @@ def webcamDataToNASDay(nas_info, dir):
         print(f'Now: {datetime.now()} Today: {today}, Yesterday: {yesterday}')
         if prev_today != None:
             if today != prev_today:
+                print('day changed')
                 day_changed = True
         if day_changed:
             ''' Find all video files created within today and yesterday '''
             tfiles, yfiles = fileChecker(today), fileChecker(yesterday)
+            print(f'Today\'s file: {tfiles}')
             if len(tfiles) > 0:
                 print(f'Upload videos collected on {yesterday}')
                 fileUploader(nas_info, dir, yfiles, yesterday)
@@ -133,6 +136,7 @@ def uploadDays(nas_info, dir, day_list):
     for day in day_list:
         print(day)
         files = fileChecker(day)
+        print(files)
         fileUploader(nas_info, dir, files, day)
 
 def deleteOldDays():
@@ -145,13 +149,27 @@ def deleteOldDays():
 
 if __name__ == '__main__':
     dir = 'SEMINAR_DIR'
-    # dir = 'LOUNGE_DIR'
-    json_file = 'C:/Users/CDSN Lab/Desktop/nas_info.json'
+    json_file = 'nas_info.json'
     with open(json_file, 'r') as f:
         nas_info = json.load(f)
+        f.close()
 
-    # webcamDataToNASInstant(nas_info, dir)
-    webcamDataToNASDay(nas_info, dir)
-    day_list = ['20210625', '20210626', '20210627']
-    # uploadDays(nas_info, dir, day_list)
+    mode = input('select the mode (0: quit, 1: webcamDataToNASDay, 2: uploadDays) ')
+    while not mode in ['0', '1', '2']:
+        print('wrong input')
+        mode = input('select the mode (0: quit, 1: webcamDataToNASDay, 2: uploadDays) ')
+
+    if mode == '0':
+        sys.exit()
+    elif mode == '1':
+        webcamDataToNASDay(nas_info, dir)
+    elif mode == '2':
+        with open('day_list.txt', 'r') as f:
+            day_list = f.readlines()
+            f.close()
+        day_list = list(map(lambda x: x.strip(), day_list))
+        uploadDays(nas_info, dir, day_list)
+    else:
+        print('Do not come here')
+        sys.exit()
 
