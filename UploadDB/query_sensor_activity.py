@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import json
 import datetime
@@ -22,6 +23,10 @@ def query_sensor_activity(db_info):
     for activity in activities:
         start_ts, end_ts, label, avg_n_human = activity[0], activity[1], activity[2], activity[3]
         
+        ''' Wrong label check '''
+        if label in ['?', '---', '-']:
+            continue
+
         ''' Query context and action data'''
         contexts = [(d['timestamp'], d['publisher'], d['name'], d['value']) for d in \
             sensor_data.find({'timestamp': {'$gt': start_ts, '$lt': end_ts}, 'type': 'context'}).sort('timestamp')]
@@ -31,6 +36,11 @@ def query_sensor_activity(db_info):
         ''' Data Processing '''
         sensor_values = sorted(contexts + actions, key=lambda x: x[0])
         # sensor_values = list(map(lambda x: list(x) + [label, avg_n_human], sensor_values))
+        
+        ''' List empty check '''
+        if not sensor_values:
+            continue
+
         sensor_table = pd.DataFrame(np.array(sensor_values), columns=['timestamp', 'publisher', 'name', 'value'])
         metadata_header = 'label, start_ts, end_ts, avg_n_human'
         metadata_content = f'{label}, {start_ts}, {end_ts}, {avg_n_human}'
