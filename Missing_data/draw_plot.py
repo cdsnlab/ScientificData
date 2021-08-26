@@ -54,13 +54,14 @@ if __name__ == '__main__':
     # file_path = '170101-210701_sensor.xlsx'  
     # file_path = '170101-210701_sensor_merge.xlsx'  
     # file_path = '170101-210701_sensor_custom.xlsx'  
-    file_path = '170101-180101_context.xlsx'
+    file_path = '170901-180101_overall.xlsx'
     # index_name = 'sensor'
-    index_name = 'context'
+    # index_name = 'context'
+    # index_name = 'task'
+    index_name = 'overall'
 
-    start_dt = datetime.datetime(2017, 1, 1, 0, 0)
+    start_dt = datetime.datetime(2017, 9, 1, 0, 0)
     end_dt = datetime.datetime(2018, 1, 1, 0, 0)
-    
     
     methods = ['max', 'mean', 'alive']
     for method in methods:

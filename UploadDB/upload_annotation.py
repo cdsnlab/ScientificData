@@ -6,13 +6,11 @@ import pymongo as pm
 import pandas as pd
 
 
-def upload_annotation(db_info, label_fname):
+def upload_annotation(db_info, sheet_list, label_fname, match_flag=False):
     ''' Connect DB '''
-    label_file = pd.read_excel(label_fname, sheet_name=['17.09.', '17.10.', '17.11.', '17.12.'], header=0)
-    label_file['17.09.'].fillna('', inplace=True)
-    label_file['17.10.'].fillna('', inplace=True)
-    label_file['17.11.'].fillna('', inplace=True)
-    label_file['17.12.'].fillna('', inplace=True)
+    label_file = pd.read_excel(label_fname, sheet_name=sheet_list, header=0)
+    for sheet in sheet_list:
+        label_file[sheet].fillna('', inplace=True)
 
     client = pm.MongoClient(db_info['address'])
     client.data.authenticate(db_info['autheticate']['name'], db_info['autheticate']['pw'], mechanism=db_info['autheticate']['mechanism'])
@@ -32,7 +30,6 @@ def upload_annotation(db_info, label_fname):
             start_time = str(df['시작시간'][i])
             end_time = str(df['종료시간'][i])
             label = df['레이블'][i]
-            label2, label3 = df[label_col2][i], df[label_col3][i]
             human_cnt = str(df['사람 수'][i])
             # print(date, files, start_time, end_time, label, human_cnt)
 
@@ -51,10 +48,17 @@ def upload_annotation(db_info, label_fname):
             duration = end_ts - start_ts
 
             ''' Data Processing 2 - avg number of humans, label matching '''
-            human_cnts = list(map(lambda x: int(x), human_cnt.split('~')))
+
+
+            human_cnts = list(map(lambda x: int(float(x)), human_cnt.split('~')))
             avg_n_human = sum(human_cnts)/len(human_cnts)
-            matched = label == label2 == label3
-            
+
+            if match_flag:
+                label2, label3 = df[label_col2][i], df[label_col3][i]
+                matched = label == label2 == label3
+            else:
+                matched = True
+
             ''' Upload Data document '''
             data.insert_one({'date': date, 
                         'video_names': files, 
@@ -63,14 +67,20 @@ def upload_annotation(db_info, label_fname):
                         'label': label, 
                         'matched': matched,
                         'duration': duration, 
-                        'avg_n_human': avg_n_human})
-        break
+                        'avg_n_human': avg_n_human, 
+                        'flag': False})
+        
     client.close()
 
 if __name__ == '__main__':
     label_fname = 'SeminarRoom_Labeling.xlsx' # Excel file which is downloaded version of google spread sheet 'SeminarRoom_Labeling'
-    json_file = 'db_info.json'
+    json_file = 'info/db_info.json'
     with open(json_file, 'r') as f:
         db_info = json.load(f)
     
-    upload_annotation(db_info, label_fname)
+    sheet_list = ['19.10 (태훈)', '19.11 (기수)', '19.12 (건)']
+    # sheet_list = ['19.11 (기수)', '19.12 (건)']
+
+    match_flag = False
+
+    upload_annotation(db_info, sheet_list, label_fname, match_flag)

@@ -123,9 +123,19 @@ def webcamDataToNASDay(nas_info, dir):
             print(f'Today\'s file: {tfiles}')
             if len(tfiles) > 0:
                 print(f'Upload videos collected on {yesterday}')
-                fileUploader(nas_info, dir, yfiles, yesterday)
-                deleteOldDays()
-                day_changed = False
+                fail_cnt = 0
+                while fail_cnt < 6:
+                    try:
+                        fileUploader(nas_info, dir, yfiles, yesterday)
+                        deleteOldDays()
+                        day_changed = False
+                        break
+                    except Exception as e:
+                        print(f'Exception occur\n---------------------\n{e}')
+                        fail_cnt += 1
+                        time.sleep(600)
+                if fail_cnt >= 6:
+                    raise Exception('Upload Error occur')
             
 
         print('\n--------------------------\n')

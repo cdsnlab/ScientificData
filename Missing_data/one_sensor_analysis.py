@@ -2,11 +2,13 @@ import pymongo as pm
 import datetime
 import time
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 import sys
 import json
 import pandas as pd
 from utils import *
+
 
 
 def one_context_analysis(db_info, context_name, start_ts, end_ts):
@@ -89,20 +91,44 @@ def one_sensor_analysis(db_info, sensor_name, start_ts, end_ts):
     return all_ts_data, all_sensor_data
 
 if __name__ == '__main__':
-    start_ts = int(time.mktime(datetime.datetime(2017, 1, 1, 0, 0).timetuple())*1000)
+    start_ts = int(time.mktime(datetime.datetime(2017, 9, 1, 0, 0).timetuple())*1000)
     end_ts = int(time.mktime(datetime.datetime(2018, 1, 1, 0, 0).timetuple())*1000)
 
     json_file = 'db_info.json'
     with open(json_file, 'r') as f:
         db_info = json.load(f)
 
-    context_list = load_list('sound_context.txt')
 
-    print(context_list)
+    # sensor_name = 'SoundSensorAgent'
+    # all_ts_data, all_sensor_data = one_sensor_analysis(db_info, sensor_name, start_ts, end_ts)
+    # # print(all_ts_data)
+    # zero_datas = []
+    # for i in range(len(all_sensor_data)):
+    #     if all_sensor_data[i] == 0:
+    #         zero_datas.append(all_ts_data[i])
+    # print(zero_datas)
+    # with open('zeros.csv', 'w') as f:
+    #     f.write("\n".join(zero_datas))
+    #     f.close()
 
-    for context_name in context_list:
-        print(context_name)
-        one_context_value_analysis(db_info, context_name, start_ts, end_ts)
+    context_name = 'sensor0_Brightness'
+    # one_context_value_analysis(db_info, context_name, start_ts, end_ts)
+
+    to_dt = lambda x: datetime.datetime.fromtimestamp(x/1000)
+
+
+    df = pd.read_csv(f'context/{context_name}.csv')
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    plt.plot(list(map(lambda x: to_dt(x), df['timestamp'])), df['value'])
+    plt.xticks([datetime.datetime(2017, 9, 1, 0, 0), datetime.datetime(2017, 10, 1, 0, 0), datetime.datetime(2017, 11, 1, 0, 0), datetime.datetime(2017, 12, 1, 0, 0), datetime.datetime(2018, 1, 1, 0, 0)])
+    plt.gcf().autofmt_xdate()
+    plt.savefig(f'context/{context_name}.png', dpi=600)
+    plt.clf()
+    # plt.scatter(all_ts_data, all_sensor_data)
+    # plt.plot(all_ts_data, all_sensor_data)
+    # plt.xticks(['21/08/10', '21/08/12', '21/08/14', '21/08/16', '21/08/18'])
+    # plt.show()
     # plt.legend()
     # plt.savefig(f'context/sound.png')
     # plt.clf()
