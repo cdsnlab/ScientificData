@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Contact us {% endblock %}
+{% block desc %}{% endblock %}
+
+{% block content %}
+<div style="margin:0% 17% 0% 17%">
+<h3>Contact form</h3>
+<form action="form_recv" method="post">
+        <div style="float: left; margin-right:2%;">
+            Name <input type="text" name="name" placeholder="Please put your name." required > 
+        </div>
+        <div style="float: left; width:300px;">
+            E-mail address <input type="email" name="email" placeholder="Please put your e-mail adress." required >
+        </div>
+        <br><br><br>
+        Message <textarea name="message" placeholder="Please write a message including the purpose of using this dataset." style="height:150px;" required></textarea>
+        <div style="float: right; margin-top:2%">
+            <input type="submit" value="submit">
+        </div>
+</form>
+
+
+<br><br>
+<h3>Address</h3>
+CDSN Lab, Room 823, Building N1,<br>
+School of Computing,<br>
+Korea Advanced Institute of Science & Technology(KAIST),<br>
+291 Daehak-ro, Yuseong-gu,<br>
+Daejeon, Republic of Korea
+
+
+<br>
+<h3>Lab website</h3>
+<a href="http://cds.kaist.ac.kr/cdsn/">
+    <img src="../static/images/cdsn_logo.jpg"
+     alt="CDSN Lab logo">
+</a>
+
+{% endblock %}
