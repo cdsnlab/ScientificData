@@ -29,8 +29,8 @@ def form_recv():
     else:
         data ={}
     msg = Message("[SD] Request for sharing dataset from " + data['name'], \
-            sender=app.config['MAIL_USERNAME'], recipients=[data['email']])
-    msg.body = data['message']
+            sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+    msg.body = f"email address: {data['email']} \nmessage:\n  {data['message']}"
     mail.send(msg)
     return render_template('form_recv.html')
 
