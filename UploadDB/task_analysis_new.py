@@ -1,7 +1,5 @@
 import os
 import sys
-import time
-import math
 import pandas as pd
 import numpy as np
 
@@ -70,11 +68,9 @@ def task_analysis(data_path, actuator_list, environment_list, single_tasks, proj
 
     with open('analysis/analysis_result.txt', 'w') as f:
         for task_name, sensor_datas in task_to_sensor.items():
-            f.write(task_name)
-            f.write('\n\n')
+            f.write(f'{task_name}+\n\n')
             for sensor in sensor_datas:
-                f.write(str(sensor))
-                f.write('\n')
+                f.write(str(sensor)+'\n')
             f.write('\n\n')
         f.close()
 
@@ -82,7 +78,6 @@ def task_analysis(data_path, actuator_list, environment_list, single_tasks, proj
     for task_name, sensor_datas in task_to_sensor.items(): 
         if task_name in projector_tasks:
             if ignore_brightness:
-                # filtered_sensors = list(map(lambda x: return_result(x, environment_list, actuator_list), filter(lambda x: x[2].count('ProjectorAgent') > 0, sensor_datas)))
                 filtered_sensors = list(map(lambda x: return_result(x, environment_list, actuator_list), filter(lambda x: len(x[1]) > 1, sensor_datas)))
             else: 
                 filtered_sensors = list(map(lambda x: return_result(x, environment_list, actuator_list), filter(lambda x: (x[3].count(0.0)+x[3].count(np.NaN)) == 0, sensor_datas)))
