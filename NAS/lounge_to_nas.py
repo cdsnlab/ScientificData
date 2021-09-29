@@ -80,32 +80,6 @@ def fileUploader(nas_info, dir, selected, date):
     ''' Close the connection '''
     ssh_manager.close_ssh_client() 
 
-def webcamDataToNASInstant(nas_info, dir):
-    prev_today = None
-    prev_tfiles, prev_yfiles = None, None
-    while True:
-        ''' Find today '''
-        today, yesterday = dateChecker()
-        print(f'Now: {datetime.now()} Today: {today}, Yesterday: {yesterday}')
-        if prev_today != None:
-            if prev_today != today:
-                prev_tfiles, prev_yfiles = [], tfiles
-
-        ''' Find all video files created within today and yesterday '''
-        tfiles, yfiles = fileChecker(today), fileChecker(yesterday)
-        tfiles = tfiles[:-1]
-        if prev_tfiles != None:
-            ''' Select the file to be uploaded'''
-            today_selected, yesterday_selected = fileSelector(tfiles, yfiles, prev_tfiles, prev_yfiles)
-            print(f'selected:\n{today_selected, yesterday_selected}')
-
-            fileUploader(nas_info, dir, today_selected, today)
-            fileUploader(nas_info, dir, yesterday_selected, yesterday)
-        print('\n--------------------------\n')
-        prev_tfiles, prev_yfiles = tfiles, yfiles
-        prev_today = today
-        time.sleep(300)
-
 def webcamDataToNASDay(nas_info, dir):
     prev_today = None
     day_changed = False
