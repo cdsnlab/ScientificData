@@ -65,8 +65,8 @@ def multi_sensor_analysis(db_info, sensor_list, start_ts, end_ts):
 
 
 if __name__ == '__main__':
-    start_ts = int(time.mktime(datetime.datetime(2017, 9, 1, 0, 0).timetuple())*1000)
-    end_ts = int(time.mktime(datetime.datetime(2018, 1, 1, 0, 0).timetuple())*1000)
+    start_ts = int(time.mktime(datetime.datetime(2021, 4, 1, 0, 0).timetuple())*1000)
+    end_ts = int(time.mktime(datetime.datetime(2021, 10, 1, 0, 0).timetuple())*1000)
 
     json_file = 'db_info.json'
     with open(json_file, 'r') as f:
@@ -78,7 +78,9 @@ if __name__ == '__main__':
     # multi_sensor_analysis(db_info, sensor_list, start_ts, end_ts)
 
     # context_list = load_context_list()
-    context_list = load_list('context_lists/1709to12_context.txt')
+    # context_list = load_list('context_lists/1709to12_context.txt')
+    context_list = load_list('21_4_to_10.txt')
+
     print(context_list)
     multi_context_analysis(db_info, context_list, start_ts, end_ts)
 
