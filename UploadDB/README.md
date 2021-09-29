@@ -8,6 +8,8 @@
 2. MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장 (`query_sensor_activity.py`, `query_data.py `)
 3. 기존의 메타데이터에 `sensor_name`행을 추가 (`add_sensor_name.py`)
 4. 쓸모없는 센서데이터 필터링 (`data_filter.py`)
+5. 센서 및 메타데이터를 재배치 (rearrange_data.py)
+6. 각 액티비티 별 평균 duration을 측정 (avg_duration.py)
 
 이외의 파일(`correct_time.py`, `filename_extract.py`, `test.py`)에 대해서는 무시해도 좋습니다.
 
@@ -128,3 +130,29 @@ MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Act
 
 1. duration이 5분이 넘지 못하는 에피소드
 2. 등장하는 ambient sensor의 종류가 에이전트 단위로 2종류 이상 나오지 못하는 에피소드 
+
+## rearrange_data.py
+
+### 코드 설명
+
+센서 데이터를 publish 공개하기 위해 기존에 추출한 데이터를 재배치하는 코드입니다. 새롭게 배치되는 형식은 다음과 같습니다.
+
+```bash
+|--- ScientificData
+	|--- {Activity_name_1}
+	|	|--- metadata
+	|	|	|--- {Activity_name_1}.txt
+	|	|--- sensor
+	|		|--- {Activity_name_1}.csv
+	|---{Activity_name_2}
+		|--- metadata
+		|	|--- {Activity_name_2}.txt
+		|--- sensor
+			|--- {Activity_name_2}.csv
+```
+
+## avg_duration.py
+
+### 코드 설명
+
+전체 데이터 셋에서 각 액티비티의 평균 에피소드 duration을 측정하는 코드입니다.
