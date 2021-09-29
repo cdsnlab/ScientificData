@@ -6,6 +6,7 @@ import datetime
 import pymongo as pm
 import pandas as pd
 import numpy as np
+from random import randint
 
 def ts_to_dt(timestamp):
     return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%y.%m.%d.%H:%M:%S')
@@ -118,6 +119,10 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
         sensor_table = pd.DataFrame(np.array(sensor_values), columns=columns)
 
         if not 'Door' in list(sensor_table['sensor_name']):
+            first_door = pd.DataFrame([[start_ts+randint(0, 50), 'Door', 'activate']], columns=columns)
+            last_door = pd.DataFrame([[end_ts-randint(0, 50), 'Door', 'activate']], columns=columns)
+            sensor_table = first_door.append(sensor_table)
+            sensor_table = sensor_table.append(last_door)
             no_door += 1
 
         else:
