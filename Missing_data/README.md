@@ -10,7 +10,7 @@
 4. MongoDB를 쿼리해서 특정 기간동안 하루단위로 각 종류의 context가 등장하는지 확인 (`multi_sensor_analysis.py`)
 5. 1~4번에서 얻어낸 데이터를 heatmap으로 시각화 (`draw_plot.py`)
 
-이외의 파일(`draw_plot2.py`, `merge_context`, `publisher_analysis.py`,  `query_agent.py`, `test.py`, `utils.py`)무시해도 좋습니다.
+이외의 파일(`draw_plot2.py`, `merge_context`,  `query_agent.py`, `test.py`, `utils.py`)무시해도 좋습니다.
 
 ## Requirement
 
@@ -206,3 +206,9 @@ if __name__ == '__main__':
 
 * 엑셀 파일의 시간 범위를 벗어나는 시작 일자와 종료 일자를 설정하면 오류가 발생할 수도 있습니다.
 * 생성 되는 Heatmap 이미지의 옵션을 변경하려면 `draw_heatmap` 함수의 36번째 줄부터 48번째 줄을 수정하면 될 것입니다. 
+
+## publisher_analysis.py
+
+### 코드 설명
+
+MongoDB를 쿼리해서 특정 기한 내에 등장하는 모든 context의 name과 publisher 그리고 출현 빈도를 추출하는 코드입니다. 코드의 실행 결과는 `.xlsx` 파일로 저장됩니다.
