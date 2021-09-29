@@ -77,7 +77,7 @@ def pair_cnt_analysis(db_info, start_ts, end_ts):
 
     np_datas = np.array(list(map(lambda x, y: (x[0], x[1], y), pairs, cnts)))
     pivot = pd.DataFrame(np_datas, columns=['name', 'publisher', 'count'])
-    fname = 'pair_19_10to12.xlsx'
+    fname = 'pair_21_4to10_all.xlsx'
     pivot.to_excel(fname,
                     sheet_name='Sheet1',
                     na_rep = 'NaN', 
@@ -86,8 +86,8 @@ def pair_cnt_analysis(db_info, start_ts, end_ts):
             )
 
 if __name__ == '__main__':
-    start_ts = int(time.mktime(datetime.datetime(2019, 10, 1, 0, 0).timetuple())*1000)
-    end_ts = int(time.mktime(datetime.datetime(2020, 1, 1, 0, 0).timetuple())*1000)
+    start_ts = int(time.mktime(datetime.datetime(2021, 4, 1, 0, 0).timetuple())*1000)
+    end_ts = int(time.mktime(datetime.datetime(2021, 10, 1, 0, 0).timetuple())*1000)
 
 
 
