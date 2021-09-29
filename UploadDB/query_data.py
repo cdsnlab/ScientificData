@@ -51,6 +51,8 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
         result_df_columns.append('end_dt')
     result_df = pd.DataFrame(columns=result_df_columns)
 
+    no_door, yes_door = 0, 0
+
     ''' Query Activity list '''
     activities = [tuple(map(lambda x: d[x], selects)) for d in \
         annotation_data.find(options).sort('date').sort('start_timestamp')]
@@ -115,6 +117,12 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
 
         sensor_table = pd.DataFrame(np.array(sensor_values), columns=columns)
 
+        if not 'Door' in list(sensor_table['sensor_name']):
+            no_door += 1
+
+        else:
+            yes_door += 1
+
 
         metadata_header = result_df_columns
         metadata_content = [f'{label}', f'{start_ts}', f'{end_ts}', f'{avg_n_human}', f'{(end_ts-start_ts)//1000}']
@@ -148,6 +156,7 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
             f.close()
     
 
+    print(f'YES door: {yes_door}, NO door: {no_door}')
     ''' Save summary file '''
     result_df.to_excel('SensorData_summary.xlsx', index=False)
     client.close()
