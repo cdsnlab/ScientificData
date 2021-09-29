@@ -13,7 +13,7 @@ AIRCON = ('Aircon_1', 'Aircon_2')
 
 ENV_SENSORS = (AMBIENT, MONNIT, PODIUM, SOUND)
 
-def data_filter(time_thres):
+def data_filter(time_thres, occur_thres):
     meta_path = 'metadata'
     sensor_path = 'sensor'
     metas = glob.glob(f'{meta_path}/*')
@@ -42,6 +42,25 @@ def data_filter(time_thres):
         
     print(len(metas), len(sensors))
 
+    ''' Filtering by sensor occurance '''
+    occurence_filtered = []
+    for i, sensor in enumerate(sensors):
+        df = pd.read_csv(sensor)
+        occurence = set(df['sensor_name'])
+        ''' ENV_SENSORS = (AMBIENT, MONNIT, PODIUM, SOUND) '''
+        env_occurence = list(map(lambda x: len(set(x) & occurence) > 0, ENV_SENSORS))
+        env_occur_cnt = sum(env_occurence)
+
+        if env_occur_cnt < occur_thres:
+            print(occurence)
+            print(env_occurence)
+            occurence_filtered.append((i, sensor))
+
+    for _, x in enumerate(reversed(occurence_filtered)):
+        print(x)
+        remove_list.append((metas.pop(x[0]), sensors.pop(x[0])))
+        print(remove_list[-1])
+
     print(len(metas), len(sensors))
     print(remove_list)
     for target in remove_list:
@@ -50,4 +69,5 @@ def data_filter(time_thres):
 
 if __name__ == '__main__':
     time_thres = 60*5 # Neet at least 5 minute duration
-    data_filter(time_thres)
+    occur_thres = 2 # Need at least two environmental sensor agent 
+    data_filter(time_thres, occur_thres)
