@@ -8,51 +8,6 @@ import pandas as pd
 import json
 from utils import *
 
-
-def publihser_analysis(db_info, start_ts, end_ts):
-    ''' Data Crawling from Lapras DB '''
-    client = pm.MongoClient(db_info['address'])
-    client.data.authenticate(db_info['autheticate']['name'], db_info['autheticate']['pw'], mechanism=db_info['autheticate']['mechanism'])
-    db = client.data
-    data = db.N1SeminarRoom825_data
-
-    db_datas = [d['publisher'] for d in \
-        data.find({'timestamp': {'$gt': start_ts, '$lt': end_ts}}).sort('timestamp')]
-
-    client.close()
-
-    np_datas = np.array(list(set(db_datas)))
-    pivot = pd.DataFrame(np_datas, columns=['publisher'])
-    fname = 'publisher.xlsx'
-    pivot.to_excel(fname,
-                    sheet_name='Sheet1',
-                    na_rep = 'NaN', 
-                    header = True, 
-                    index = False, 
-            )
-
-def pair_analysis(db_info, start_ts, end_ts):
-    ''' Data Crawling from Lapras DB '''
-    client = pm.MongoClient(db_info['address'])
-    client.data.authenticate(db_info['autheticate']['name'], db_info['autheticate']['pw'], mechanism=db_info['autheticate']['mechanism'])
-    db = client.data
-    data = db.N1SeminarRoom825_data
-
-    db_datas = [(d['name'], d['publisher']) for d in \
-        data.find({'timestamp': {'$gt': start_ts, '$lt': end_ts}}).sort('timestamp')]
-
-    client.close()
-
-    np_datas = np.array(list(set(db_datas)))
-    pivot = pd.DataFrame(np_datas, columns=['name', 'publisher'])
-    fname = 'pair.xlsx'
-    pivot.to_excel(fname,
-                    sheet_name='Sheet1',
-                    na_rep = 'NaN', 
-                    header = True, 
-                    index = False, 
-            )
-
 def pair_cnt_analysis(db_info, start_ts, end_ts):
     ''' Data Crawling from Lapras DB '''
     client = pm.MongoClient(db_info['address'])

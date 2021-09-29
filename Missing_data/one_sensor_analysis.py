@@ -56,14 +56,6 @@ def one_context_value_analysis(db_info, context_name, start_ts, end_ts):
 
     pivot.to_csv(fname, sep=',', na_rep='NaN')
 
-    # for i in range(len(sensor_values)):
-    #     all_sensor_data[(ts[i]-start_ts)//scale] += 1
-    # ts = list(map(lambda x: x[0], sensor_values))
-    # values = list(map(lambda x: x[1], sensor_values))
-    # plt.plot(ts, values, label=context_name)
-    # plt.savefig(f'context/{context_name}.png')
-    # plt.clf()
-
 def one_sensor_analysis(db_info, sensor_name, start_ts, end_ts):
     ''' Data Crawling from Lapras DB '''
     client = pm.MongoClient(db_info['address'])
@@ -125,13 +117,6 @@ if __name__ == '__main__':
     plt.gcf().autofmt_xdate()
     plt.savefig(f'context/{context_name}.png', dpi=600)
     plt.clf()
-    # plt.scatter(all_ts_data, all_sensor_data)
-    # plt.plot(all_ts_data, all_sensor_data)
-    # plt.xticks(['21/08/10', '21/08/12', '21/08/14', '21/08/16', '21/08/18'])
-    # plt.show()
-    # plt.legend()
-    # plt.savefig(f'context/sound.png')
-    # plt.clf()
 
 
         
