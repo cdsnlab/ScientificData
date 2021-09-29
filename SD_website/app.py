@@ -1,6 +1,15 @@
 from flask import Flask, render_template, request
+from flask_mail import Mail, Message
+
 
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = ''
+app.config['MAIL_PASSWORD'] = ''
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 @app.route('/')
 def index():
@@ -13,6 +22,16 @@ def page_not_found(error):
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/form_recv', methods=['POST'])
+def form_recv():
+    data = request.form
+
+    msg = Message("[SD] Request for sharing dataset from " + data['name'], \
+            sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+    msg.body = f"email address: {data['email']} \nmessage:\n  {data['message']}"
+    mail.send(msg)
+    return render_template('form_recv.html')
 
 if __name__ == '__main__':
     from waitress import serve
