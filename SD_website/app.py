@@ -25,8 +25,10 @@ def contact():
 
 @app.route('/form_recv', methods=['POST'])
 def form_recv():
-    data = request.form
-
+    if request.method == 'POST':
+        data = request.form
+    else:
+        data ={}
     msg = Message("[SD] Request for sharing dataset from " + data['name'], \
             sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
     msg.body = f"email address: {data['email']} \nmessage:\n  {data['message']}"
