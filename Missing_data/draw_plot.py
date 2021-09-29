@@ -19,6 +19,8 @@ def draw_heatmap(file_path, fname, start_dt, end_dt, method='alive', index_name=
             row = df.iloc[i]
             if row.max() > 0:
                 df.iloc[i] = row/row.max()
+                # df.iloc[i] = row
+
     elif method == 'mean':
         for i in range(len(df)):
             row = df.iloc[i]
@@ -54,14 +56,15 @@ if __name__ == '__main__':
     # file_path = '170101-210701_sensor.xlsx'  
     # file_path = '170101-210701_sensor_merge.xlsx'  
     # file_path = '170101-210701_sensor_custom.xlsx'  
-    file_path = '170901-180101_overall.xlsx'
+    # file_path = '170901-180101_overall.xlsx'
+    file_path = '210401-211001_context.xlsx'
     # index_name = 'sensor'
-    # index_name = 'context'
+    index_name = 'context'
     # index_name = 'task'
-    index_name = 'overall'
+    # index_name = 'overall'
 
-    start_dt = datetime.datetime(2017, 9, 1, 0, 0)
-    end_dt = datetime.datetime(2018, 1, 1, 0, 0)
+    start_dt = datetime.datetime(2021, 4, 1, 0, 0)
+    end_dt = datetime.datetime(2021, 10, 1, 0, 0)
     
     methods = ['max', 'mean', 'alive']
     for method in methods:
