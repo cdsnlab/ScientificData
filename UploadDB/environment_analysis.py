@@ -313,4 +313,7 @@ if __name__ == '__main__':
     #     single_environment_analysis_from_annotation_task(db_info, context_name, zero_remove, matched)
 
     # multi_environment_analysis_from_annotation_task(db_info, contexts, zero_remove, matched)
-    multi_environment_analysis_from_local(contexts, actuators, 'sensor', zero_remove)
+    sensor_dir = 'sensor'
+    multi_environment_analysis_from_local(contexts, actuators, sensor_dir, zero_remove)
+
+
