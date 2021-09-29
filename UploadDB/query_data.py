@@ -19,7 +19,7 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
     sensor_data = db.N1SeminarRoom825_data
 
     options = {'date': { '$regex' : "2017", '$options' : 'i' }}
-    selects = ['start_timestamp', 'end_timestamp', 'label']
+    selects = ['start_timestamp', 'end_timestamp', 'label', 'avg_n_human']
 
     pair_df = pd.read_excel(pair_path, sheet_name=None)
 
@@ -117,7 +117,7 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
 
 
         metadata_header = result_df_columns
-        metadata_content = [f'{label}', f'{start_ts}', f'{end_ts}', f'{avg_n_human}']
+        metadata_content = [f'{label}', f'{start_ts}', f'{end_ts}', f'{avg_n_human}', f'{(end_ts-start_ts)//1000}']
         if video_name:
             metadata_content.append(f'{video_names}')
         if dt:
