@@ -10,7 +10,7 @@ import numpy as np
 def ts_to_dt(timestamp):
     return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%y.%m.%d.%H:%M:%S')
 
-def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=False, matched=False, empty=False):
+def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=False, matched=False, empty=False, only_meta=False):
     ''' Connect DB '''
     client = pm.MongoClient(db_info['address'])
     client.data.authenticate(db_info['autheticate']['name'], db_info['autheticate']['pw'], mechanism=db_info['autheticate']['mechanism'])
@@ -19,7 +19,7 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
     sensor_data = db.N1SeminarRoom825_data
 
     options = {'date': { '$regex' : "2017", '$options' : 'i' }}
-    selects = ['start_timestamp', 'end_timestamp', 'label', 'avg_n_human']
+    selects = ['start_timestamp', 'end_timestamp', 'label']
 
     pair_df = pd.read_excel(pair_path, sheet_name=None)
 
@@ -43,15 +43,13 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
     if video_name:
         selects.append('video_names')
     
-    result_df_columns = ['label', 'start_ts', 'end_ts', 'avg_n_human']
+    result_df_columns = ['label', 'start_ts', 'end_ts', 'avg_n_human', 'duration']
     if video_name:
         result_df_columns.append('video_names')
     if dt:
         result_df_columns.append('start_dt')
         result_df_columns.append('end_dt')
     result_df = pd.DataFrame(columns=result_df_columns)
-
-
 
     ''' Query Activity list '''
     activities = [tuple(map(lambda x: d[x], selects)) for d in \
@@ -140,7 +138,8 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
         metadata_fname = f'{metadata_dir}/{label}_{start_ts}.txt'
 
         ''' Save Sensor data'''
-        sensor_table.to_csv(sensor_fname, sep=',', na_rep='', index=False)
+        if not only_meta:
+            sensor_table.to_csv(sensor_fname, sep=',', na_rep='', index=False)
 
         ''' Save Meta data '''
         with open(metadata_fname, 'w') as f:
@@ -148,6 +147,7 @@ def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=F
                 f.write(f'{metadata_header[i]}: {metadata_content[i]}\n')
             f.close()
     
+
     ''' Save summary file '''
     result_df.to_excel('SensorData_summary.xlsx', index=False)
     client.close()
@@ -163,11 +163,11 @@ if __name__ == '__main__':
     pair_path = 'info/context_name_map.xlsx'
 
     flag = False
-    video_name = True
+    video_name = False
     dt = False
     matched = False
     monnit = False
-    sound = False
     empty = False
+    only_meta = False
     
-    query_sensor_activity(db_info, pair_path, flag, video_name, dt, matched, empty)
+    query_sensor_activity(db_info, pair_path, flag, video_name, dt, matched, empty, only_meta)
