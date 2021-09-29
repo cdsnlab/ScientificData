@@ -133,6 +133,7 @@ def _to_list(results):
     return results
 
 
+# added by th
 def extract_episode(opt, save_dir, out_name):
     with open(save_dir, 'r') as f:
         json_data = json.load(f)
@@ -187,12 +188,14 @@ def extract_episode(opt, save_dir, out_name):
         json.dump(episodes, f, indent='\t')
 
 
+# added by th
 def frame2min(spf, frame_num, correction=0):
     sec = spf * float(frame_num) - correction
     hms = strftime("%H:%M:%S", gmtime(sec))
     return hms
 
 
+# added by th
 def cal_avg(numbers):
     return sum(numbers) / len(numbers)
 
