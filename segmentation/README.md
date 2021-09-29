@@ -26,6 +26,8 @@
 ### demo.sh
 - 영상 데이터는 nas에 저장되어 있고, nas 디렉토리의 구조는 다음과 같습니다.
 - ../nas 폴더 구조
+
+
     ![캡처](https://user-images.githubusercontent.com/27489013/135263123-d0e475c6-33a6-4e52-a011-3ac9eaea1049.JPG)
 
     
