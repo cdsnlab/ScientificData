@@ -53,7 +53,7 @@ Goolge Speard Sheet에서 Annotation한 Activity 데이터를 MongoDB로 업로�
 * `db_info.json`파일은 Service Provision Notion에 업로드해두었습니다.
   * 경로: Service Provision->Scientific Data->Segmentation using Video
 
-## query_sensor_activity.py
+## query_sensor_activity.py 
 
 ### 코드 설명
 
@@ -75,6 +75,35 @@ MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Act
 
    ```bash
    python query_sensor_activity.py
+   ```
+
+### 주의 사항
+
+* `upload_annotation.py`을 통해 activity 데이터가 N1SeminarRoom825_Annotation collection에 저장된 이후에 본 코드를 사용해야 합니다. 
+* `db_info.json`파일은 Service Provision Notion에 업로드해두었습니다.
+  * 경로: Service Provision->Scientific Data->Segmentation using Video
+
+## query_data.py 
+
+### 코드 설명
+
+MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장하는 코드입니다. `query_sensor_activity.py`와 다르게 각 context마다 새로운 sensor name을 부여하였다. N1SeminarRoom825_Annotation collection을 우선적으로 쿼리하여 9월 부터 12월동안의 모든 Activity 데이터를 추출한 후, 각 activity의 시작과 끝나는 지점의 타임스탬프 사이의 센서데이터를 수집하는 형식으로 설계되었습니다. 본 코드를 통해 저장되는 데이터는 다음과 같습니다.
+
+1. 센서 데이터
+   * `sensor` 폴더에 저장되며, {레이블}_{시작 지점의 타임스탬프}.csv의 형태로 저장
+   * 각 context의 timestamp, sensor_name, value 값들이 저장
+2. 메타 데이터
+   * `metadata` 폴더에 저장되며, {레이블}_{시작 지점의 타임스탬프}.txt의 형태로 저장
+   * 해당 activity의 label, start timestamp, end timestamp, average number of human, duration 값들이 저장
+
+### 사용 방법
+
+1. DB 정보가 담긴 json 파일 (`db_info.json`)을 본 폴더안에 넣어준다. 
+
+2. 별도의 argument 없이 코드를 동작 시킨다.
+
+   ```bash
+   python query_data.py
    ```
 
 ### 주의 사항
