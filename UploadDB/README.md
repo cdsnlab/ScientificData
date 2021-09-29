@@ -5,11 +5,11 @@
 이 폴더에는 다음과 같은 기능을 수행하는 코드들이 담겨있습니다. 
 
 1. Annotation한 Activity 데이터를 MongoDB로 업로드 (`upload_annotation.py`)
-2. MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장 (`query_sensor_activity.py`, `query_data.py `)
+2. MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장 (`query_sensor_activity_target.py`, `query_data.py `)
 3. 기존의 메타데이터에 `sensor_name`행을 추가 (`add_sensor_name.py`)
 4. 쓸모없는 센서데이터 필터링 (`data_filter.py`)
-5. 센서 및 메타데이터를 재배치 (rearrange_data.py)
-6. 각 액티비티 별 평균 duration을 측정 (avg_duration.py)
+5. 센서 및 메타데이터를 재배치 (`rearrange_data.py`)
+6. 각 액티비티 별 평균 duration을 측정 (`avg_duration.py`)
 
 이외의 파일(`correct_time.py`, `filename_extract.py`, `test.py`)에 대해서는 무시해도 좋습니다.
 
@@ -57,7 +57,7 @@ Goolge Speard Sheet에서 Annotation한 Activity 데이터를 MongoDB로 업로�
 * `db_info.json`파일은 Service Provision Notion에 업로드해두었습니다.
   * 경로: Service Provision->Scientific Data->Segmentation using Video
 
-## query_sensor_activity.py 
+## query_sensor_activity_target.py 
 
 ### 코드 설명
 
@@ -78,7 +78,7 @@ MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Act
 2. 별도의 argument 없이 코드를 동작 시킨다.
 
    ```bash
-   python query_sensor_activity.py
+   python query_sensor_activity_target.py
    ```
 
 ### 주의 사항
