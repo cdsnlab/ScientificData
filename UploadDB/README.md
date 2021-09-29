@@ -5,7 +5,9 @@
 이 폴더에는 다음과 같은 기능을 수행하는 코드들이 담겨있습니다. 
 
 1. Annotation한 Activity 데이터를 MongoDB로 업로드 (`upload_annotation.py`)
-2. MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장 (`query_sensor_activity.py`)
+2. MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Activity가 진행되는 동안의 센서데이터를 수집하여 하나의 CSV 파일에 저장 (`query_sensor_activity.py`, `query_data.py `)
+3. 기존의 메타데이터에 `sensor_name`행을 추가 (`add_sensor_name.py`)
+4. 쓸모없는 센서데이터 필터링 (`data_filter.py`)
 
 이외의 파일(`correct_time.py`, `filename_extract.py`, `test.py`)에 대해서는 무시해도 좋습니다.
 
@@ -111,3 +113,18 @@ MongoDB에 있는 Sensor 데이터와 Activity 데이터를 활용하여 각 Act
 * `upload_annotation.py`을 통해 activity 데이터가 N1SeminarRoom825_Annotation collection에 저장된 이후에 본 코드를 사용해야 합니다. 
 * `db_info.json`파일은 Service Provision Notion에 업로드해두었습니다.
   * 경로: Service Provision->Scientific Data->Segmentation using Video
+
+## add_sensor_name.py
+
+### 코드 설명
+
+`metadata` 폴더 안에 있는 메타데이터 파일에 해당 에피소드 동안 등장한 모든 sensor name을 리스트화하여 기록하는 코드입니다. 예를들어 메타데이터 파일 `Eating together_1504767471000.txt`에 센서데이터 `Eating together_1504767471000.csv`의 `sensor_name` 리스트를 기록합니다.
+
+## data_filter.py
+
+### 코드 설명
+
+`metadata`와 `sensor` 폴더 안에 있는 파일들 중 activity recognition을 하기 위한 필요조건을 갖추지 못한 파일들을 필터링 하는 코드입니다. 다음과 같은 기준으로 필터링을 진행했습니다.
+
+1. duration이 5분이 넘지 못하는 에피소드
+2. 등장하는 ambient sensor의 종류가 에이전트 단위로 2종류 이상 나오지 못하는 에피소드 
