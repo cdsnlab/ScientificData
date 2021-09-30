@@ -11,7 +11,7 @@ from random import randint
 def ts_to_dt(timestamp):
     return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%y.%m.%d.%H:%M:%S')
 
-def query_sensor_activity(db_info, pair_path, flag=False, video_name=False, dt=False, matched=False, empty=False, only_meta=False):
+def query_data(db_info, pair_path, flag=False, video_name=False, dt=False, matched=False, empty=False, only_meta=False):
     ''' Connect DB '''
     client = pm.MongoClient(db_info['address'])
     client.data.authenticate(db_info['autheticate']['name'], db_info['autheticate']['pw'], mechanism=db_info['autheticate']['mechanism'])
@@ -184,4 +184,4 @@ if __name__ == '__main__':
     empty = False
     only_meta = False
     
-    query_sensor_activity(db_info, pair_path, flag, video_name, dt, matched, empty, only_meta)
+    query_data(db_info, pair_path, flag, video_name, dt, matched, empty, only_meta)
