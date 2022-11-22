@@ -9,8 +9,9 @@ import subprocess
 from scp import SCPClient, SCPException 
 
 
-# command = 'mongodump --host smart-iot.kaist.ac.kr --port 27017 -u DataCollectorAgent -p CdsnLab@7759 --db data'
-COMMAND = 'mongodump --host smart-iot.kaist.ac.kr --port 27017 -u DataCollectorAgent -p CdsnLab@7759 --db data --out ./dump --collection {}'
+with open('command.txt') as f:
+    COMMAND = f.read()
+    f.close()
 DEST = './dump'
 COLLECTIONS = ['N1SeminarRoom825_data', 'N1Lounge8F_data']
 
