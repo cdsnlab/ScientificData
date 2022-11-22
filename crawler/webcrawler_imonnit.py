@@ -13,6 +13,9 @@ from datetime import datetime
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 with open("./keys/config_mongo.json") as f:
     info_mongo=json.load(f)
@@ -35,21 +38,25 @@ def create_session():
     chrome_options.binary_location=''
     chrome_options.add_argument('--headless') # hide the browser window
     chrome_path=r'/usr/local/bin/chromedriver'
-    driver=webdriver.Chrome(executable_path=chrome_path, options=chrome_options)
+    # driver=webdriver.Chrome(executable_path=chrome_path, options=chrome_options)
+    driver=webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     return driver
 
-def login_and_links(s):
+def login_and_links(s: webdriver.Chrome):
     s.get('https://www.imonnit.com')
-    s.find_element_by_id('UserName').send_keys(username_imonnit)
-    s.find_element_by_id('Password').send_keys(password_imonnit)
-    s.find_element_by_xpath("//input[@value='Login']").click()
+    # s.find_element_by_id('UserName').send_keys(username_imonnit)
+    # s.find_element_by_id('Password').send_keys(password_imonnit)
+    # s.find_element_by_xpath("//input[@value='Login']").click()
+    s.find_element(By.ID, 'UserName').send_keys(username_imonnit)
+    s.find_element(By.ID, 'Password').send_keys(password_imonnit)
+    s.find_element(By.XPATH, "//input[@value='Login']").click()
     
     soup=bs(s.page_source,'lxml')
-    print(soup)
+    # print(soup)
     # get page list of all sensors (21 sensors)
     value=soup.findAll(href=re.compile("^/Overview/SensorChart"), style=re.compile('^color:'))
-    print(value)
+    # print(value)
     href_list=['https://www.imonnit.com'+(item['href'].replace('Chart',"Home")) for i, item in enumerate(value) if i%2==0]
     
     return href_list

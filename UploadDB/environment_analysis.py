@@ -8,6 +8,7 @@ import pymongo as pm
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
 
 
 def single_environment_analysis_from_local(context_name, sensor_dir, zero_remove):
@@ -17,7 +18,7 @@ def single_environment_analysis_from_local(context_name, sensor_dir, zero_remove
                     'Study together': [], 'Eating together': []}
 
     for fname in fnames:
-        label = fname.split('\\')[1].split('_')[0]
+        label = fname.split('\\')[-1].split('/')[-1].split('_')[0]
 
         if task_datas.get(label) == None:
             continue
@@ -48,7 +49,7 @@ def single_actuator_analysis_from_local(actuator_name, sensor_dir):
                     'Study together': [], 'Eating together': []}
 
     for fname in fnames:
-        label = fname.split('\\')[1].split('_')[0]
+        label = fname.split('\\')[-1].split('/')[-1].split('_')[0]
 
         if task_datas.get(label) == None:
             continue
@@ -88,28 +89,43 @@ def multi_environment_analysis_from_local(context_names, actuator_names, sensor_
     summarys = list(map(lambda x: [all_sensor_datas[context][x][1:] for context in context_names+actuator_names], tasks))
 
     dfs = list(map(lambda x: pd.DataFrame(x, index=context_names+actuator_names, columns=['mean', 'median', 'std']), summarys))
-    writer = pd.ExcelWriter('Distribution/summary.xlsx', engine='xlsxwriter')
-    for i, df in enumerate(dfs):
-        df.to_excel(writer,
-                    sheet_name=f'{tasks[i]}',
-                    na_rep = 'NaN', 
-                    float_format = "%.3f", 
-                    header = True, 
-                    index = True, 
-                    index_label = "context", 
-            )
-    writer.save()
+    # writer = pd.ExcelWriter('Distribution/summary.xlsx', engine='xlsxwriter')
+    # for i, df in enumerate(dfs):
+    #     df.to_excel(writer,
+    #                 sheet_name=f'{tasks[i]}',
+    #                 na_rep = 'NaN', 
+    #                 float_format = "%.3f", 
+    #                 header = True, 
+    #                 index = True, 
+    #                 index_label = "context", 
+    #         )
+    # writer.save()
 
 
-    # green_diamond = dict(markerfacecolor='g', marker='D')
-    for i, context_name in enumerate(context_names+actuator_names):
-        plt.boxplot(sensor_values[i], 0, '')
-        # plt.boxplot(sensor_values[i], flierprops=green_diamond)
-        plt.title(f"Distribution: {context_name}")
-        plt.xticks(list(range(1, len(tasks)+1)), tasks, fontsize = 5)
-        plt.gcf().autofmt_xdate()
-        plt.savefig(result_path.format(context_name), dpi=600)
-        plt.clf()    
+    # # green_diamond = dict(markerfacecolor='g', marker='D')
+    # for i, context_name in enumerate(context_names+actuator_names):
+    #     plt.boxplot(sensor_values[i], 0, '')
+    #     # plt.boxplot(sensor_values[i], flierprops=green_diamond)
+    #     plt.title(f"Distribution: {context_name}")
+    #     plt.xticks(list(range(1, len(tasks)+1)), tasks, fontsize = 5)
+    #     plt.gcf().autofmt_xdate()
+    #     plt.savefig(result_path.format(context_name), dpi=600)
+    #     plt.clf()    
+    with open('distribution_pickle.txt', 'wb') as f:
+        pickle.dump(sensor_values, f)
+        f.close()
+
+    fig = plt.figure()
+    senssor_len = len(context_names)
+    all_names = context_names+actuator_names
+    axs = list(map(lambda x: fig.add_subplot(senssor_len, 1, x+1), range(senssor_len)))
+    for i, ax in enumerate(axs):
+        ax.boxplot(sensor_values[all_names.index(context_names[i])], 0, '')
+        ax.set_ylabel(context_names[i], fontsize = 10, rotation=0, labelpad=15, horizontalalignment='right')
+        
+    plt.xticks(list(range(1, len(tasks)+1)), tasks, fontsize = 10)
+    plt.gcf().autofmt_xdate()
+    plt.show()
 
 def single_environment_analysis_from_annotation_task(db_info, context_name, zero_remove, matched=False):
     ''' Data Crawling from Lapras DB '''
