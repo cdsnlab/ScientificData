@@ -1,0 +1,11 @@
+Sound_C
+Sound_R
+Sound_L
+Brightness_1
+Humidity_1
+Temperature_1
+Brightness_2
+Humidity_2
+Temperature_2
+PodiumIR
+Sound_P
