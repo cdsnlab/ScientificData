@@ -14,12 +14,14 @@
         <link rel="stylesheet" href={{ url_for('static', filename='css/main.css')}} />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		{% block head %}{% endblock %}
 	</head>
 	<body>
 
 		<!-- Header -->
 			<header id="header">
-				<h1><a href="home">ESPAR</a></h1>
+				<h1><a href="home">DOO-RE</a></h1>
+				{% block add_feature %}{% endblock %}
 				<a href="#nav">Menu</a>
 			</header>
 
@@ -27,7 +29,7 @@
 			<nav id="nav">
 				<ul class="links">
 					<li><a href="home">About dataset</a></li>
-					<li><a href="contact">Contact us</a></li>
+					<li><a href="contact">Contact</a></li>
 				</ul>
 			</nav>
 

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block tab_name %}Admin{% endblock %}
+{% block add_feature %} <a href="/logout">Logout</a> {% endblock %}
+{% block title %} Edit {{data['page']}} page {% endblock %}
+{% block desc %}{% endblock %}
+
+{% block content %}
+<div style="margin:0% 13% 0% 13%">
+
+<form method="post" action="/edit">
+    <input type="hidden" class="class" name="page" value="{{data['page']}}">
+
+    Tab name: <textarea name="tab_name">{{data['tab_name']}}</textarea><br>
+    Title: <textarea name="title">{{ data['title'] }}</textarea><br>
+    Description: <textarea name="desc">{{ data['desc'] }}</textarea><br>
+    Content (HTML format): <textarea name="content" style="height:700px;">{{ data['content'] }}</textarea>
+    
+    <div style="float: right; margin-top:2%">
+        <input type="submit" value="submit">
+    </div>
+
+</form>
+
+{% endblock %}

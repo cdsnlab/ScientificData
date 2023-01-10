@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block tab_name %}DOO-RE - Login{% endblock %}
+{% block title %} Access to Admin Page {% endblock %}
+{% block desc %}{% endblock %}
+
+{% block content %}
+<div style="margin:0% 35% 0% 35%">
+
+<form method="post" action="/login_confirm">
+    ID: <input type="text" name="id_"><br>
+    PW: <input type="password" name="pw_"><br>
+    
+    <div style="float: right">
+        <input type="submit" value="submit">
+    </div>
+
+</form>
+
+{% endblock %}
