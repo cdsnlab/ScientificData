@@ -4,7 +4,7 @@
 		"tab_name": "DOO-RE - About dataset",
 		"title": "DOO-RE: A dataset of ambient sensors in a meeting room for activity recognition",
 		"desc": "Hyunju Kim, Geon Kim, Tae-Hoon Lee, Kisoo Kim, and Dongman Lee, Scientific data, 2023.",
-		"content": "<p>Smart service provision using IoT are required as roles to help workers effective or efficiency in smart offices......</p>\r\n<p>If you want to receive and use our dataset, please refer to <a href=\"contact\">this link</a> and feel free to contact us.<p>\r\n\r\n"
+		"content": "<p>Smart service provision using IoT are required as roles to help workers effective or efficiency in smart offices......</p>\r\n<p>If you want to receive and use our dataset, please refer to <a href=\"contact\">this link</a> and feel free to contact us.<p>\r\nhello world\r\n\r\n"
 	},
 	"contact": {
 		"page": "contact",
