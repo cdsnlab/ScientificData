@@ -15,6 +15,13 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		{% block head %}{% endblock %}
+		<style>
+			h1 { text-transform: none; }
+			h2 { text-transform: none; }
+			h3 { text-transform: none; }
+			h4 { text-transform: none; }
+			h5 { text-transform: none; }
+		</style>
 	</head>
 	<body>
 
@@ -40,7 +47,7 @@
 
 					<header class="major special">
 						<h2>{% block title %}{% endblock %}</h2>
-                        <p>{% block desc %}{% endblock %}</p>
+                        <p style='text-transform: none'>{% block desc %}{% endblock %}</p>
 						<!-- <p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p> -->
 					</header>
                     {% block content %}{% endblock %}
