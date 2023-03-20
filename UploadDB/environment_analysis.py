@@ -42,8 +42,74 @@ def single_environment_analysis_from_local(context_name, sensor_dir, zero_remove
 
     return sensor_datas
 
+def single_environment_analysis_from_doore(context_name, sensor_dir, zero_remove):
+    task_names = glob.glob(f'{sensor_dir}/*')
+    fnames = [] 
+    for task_name in task_names:
+        fnames = fnames + glob.glob(f'{task_name}/sensor/*')
+
+    task_datas = {'Eating': [], 'Reading': [], 'Phone call': [], 'Seminar': [], 
+                    'Lab meeting': [], 'Technical discussion': [], 'Small talk': [], 
+                    'Study together': [], 'Eating together': []}
+
+    for fname in fnames:
+        label = fname.split('\\')[-1].split('/')[-1].split('_')[0]
+
+        if task_datas.get(label) == None:
+            continue
+
+        df = pd.read_csv(fname)
+        task_datas[label] = task_datas[label] + list(map(lambda x: float(x), df[df.sensor_name==context_name]['value']))
+
+    if zero_remove:
+        for task in task_datas:
+            task[task] = list(filter(lambda x: x > 0.0, task[task]))
+
+    sensor_datas = {}
+    for task in task_datas:
+        sensor_datas[task] = [np.array(task_datas[task])]
+        if len(task_datas[task]) == 0: 
+            sensor_datas[task].extend(['-', '-', '-'])
+        else:
+            sensor_datas[task].append(np.mean(sensor_datas[task][0]))
+            sensor_datas[task].append(np.median(sensor_datas[task][0]))
+            sensor_datas[task].append(np.std(sensor_datas[task][0]))
+
+    return sensor_datas
+
 def single_actuator_analysis_from_local(actuator_name, sensor_dir):
     fnames = glob.glob(f'{sensor_dir}/*')
+    task_datas = {'Eating': [], 'Reading': [], 'Phone call': [], 'Seminar': [], 
+                    'Lab meeting': [], 'Technical discussion': [], 'Small talk': [], 
+                    'Study together': [], 'Eating together': []}
+
+    for fname in fnames:
+        label = fname.split('\\')[-1].split('/')[-1].split('_')[0]
+
+        if task_datas.get(label) == None:
+            continue
+
+        df = pd.read_csv(fname)
+        task_datas[label].append(len(df[df.sensor_name==actuator_name]))
+
+    sensor_datas = {}
+    for task in task_datas:
+        sensor_datas[task] = [np.array(task_datas[task])]
+        if len(task_datas[task]) == 0: 
+            sensor_datas[task].extend(['-', '-', '-'])
+        else:
+            sensor_datas[task].append(np.mean(sensor_datas[task][0]))
+            sensor_datas[task].append(np.median(sensor_datas[task][0]))
+            sensor_datas[task].append(np.std(sensor_datas[task][0]))
+
+    return sensor_datas
+
+def single_actuator_analysis_from_doore(actuator_name, sensor_dir):
+    task_names = glob.glob(f'{sensor_dir}/*')
+    fnames = [] 
+    for task_name in task_names:
+        fnames = fnames + glob.glob(f'{task_name}/sensor/*')
+
     task_datas = {'Eating': [], 'Reading': [], 'Phone call': [], 'Seminar': [], 
                     'Lab meeting': [], 'Technical discussion': [], 'Small talk': [], 
                     'Study together': [], 'Eating together': []}
@@ -89,29 +155,44 @@ def multi_environment_analysis_from_local(context_names, actuator_names, sensor_
     summarys = list(map(lambda x: [all_sensor_datas[context][x][1:] for context in context_names+actuator_names], tasks))
 
     dfs = list(map(lambda x: pd.DataFrame(x, index=context_names+actuator_names, columns=['mean', 'median', 'std']), summarys))
-    # writer = pd.ExcelWriter('Distribution/summary.xlsx', engine='xlsxwriter')
-    # for i, df in enumerate(dfs):
-    #     df.to_excel(writer,
-    #                 sheet_name=f'{tasks[i]}',
-    #                 na_rep = 'NaN', 
-    #                 float_format = "%.3f", 
-    #                 header = True, 
-    #                 index = True, 
-    #                 index_label = "context", 
-    #         )
-    # writer.save()
+    with open('distribution_pickle2.txt', 'wb') as f:
+        pickle.dump(sensor_values, f)
+        f.close()
+
+    fig = plt.figure()
+    senssor_len = len(context_names)
+    all_names = context_names+actuator_names
+    axs = list(map(lambda x: fig.add_subplot(senssor_len, 1, x+1), range(senssor_len)))
+    for i, ax in enumerate(axs):
+        ax.boxplot(sensor_values[all_names.index(context_names[i])], 0, '')
+        ax.set_ylabel(context_names[i], fontsize = 10, rotation=0, labelpad=15, horizontalalignment='right')
+        
+    plt.xticks(list(range(1, len(tasks)+1)), tasks, fontsize = 10)
+    plt.gcf().autofmt_xdate()
+    plt.show()
 
 
-    # # green_diamond = dict(markerfacecolor='g', marker='D')
-    # for i, context_name in enumerate(context_names+actuator_names):
-    #     plt.boxplot(sensor_values[i], 0, '')
-    #     # plt.boxplot(sensor_values[i], flierprops=green_diamond)
-    #     plt.title(f"Distribution: {context_name}")
-    #     plt.xticks(list(range(1, len(tasks)+1)), tasks, fontsize = 5)
-    #     plt.gcf().autofmt_xdate()
-    #     plt.savefig(result_path.format(context_name), dpi=600)
-    #     plt.clf()    
-    with open('distribution_pickle.txt', 'wb') as f:
+def multi_environment_analysis_from_doore(context_names, actuator_names, sensor_dir, zero_remove):
+    all_sensor_datas = {}
+    for i, context_name in enumerate(context_names):
+        print(context_name)
+        all_sensor_datas[context_name] = single_environment_analysis_from_doore(context_name, sensor_dir, zero_remove)
+
+    for i, actuator_name in enumerate(actuator_names):
+        print(actuator_name)
+        all_sensor_datas[actuator_name] = single_actuator_analysis_from_doore(actuator_name, sensor_dir)
+
+    if zero_remove:
+        result_path = 'Distribution/{}_n0.png'
+    else:
+        result_path = 'Distribution/{}.png'
+
+    tasks = ['Eating', 'Reading', 'Phone call', 'Seminar', 'Lab meeting', 'Technical discussion', 'Small talk', 'Study together', 'Eating together']
+    sensor_values = list(map(lambda x: [all_sensor_datas[x][task][0] for task in tasks], context_names+actuator_names))
+    summarys = list(map(lambda x: [all_sensor_datas[context][x][1:] for context in context_names+actuator_names], tasks))
+
+    dfs = list(map(lambda x: pd.DataFrame(x, index=context_names+actuator_names, columns=['mean', 'median', 'std']), summarys))
+    with open('distribution_pickle2.txt', 'wb') as f:
         pickle.dump(sensor_values, f)
         f.close()
 
@@ -329,7 +410,7 @@ if __name__ == '__main__':
     #     single_environment_analysis_from_annotation_task(db_info, context_name, zero_remove, matched)
 
     # multi_environment_analysis_from_annotation_task(db_info, contexts, zero_remove, matched)
-    sensor_dir = 'sensor'
-    multi_environment_analysis_from_local(contexts, actuators, sensor_dir, zero_remove)
+    sensor_dir = 'DOO-RE'
+    multi_environment_analysis_from_doore(contexts, actuators, sensor_dir, zero_remove)
 
 
