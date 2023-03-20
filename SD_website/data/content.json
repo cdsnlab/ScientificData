@@ -1,0 +1,16 @@
+{
+	"home": {
+		"page": "home",
+		"tab_name": "DOO-RE - About dataset",
+		"title": "DOO-RE: A dataset of ambient sensors in a meeting room for activity recognition",
+		"desc": "Hyunju Kim, Geon Kim, Tae-Hoon Lee, Kisoo Kim, and Dongman Lee, Scientific data, 2023.",
+		"content": "<p>Smart service provision using IoT are required as roles to help workers effective or efficiency in smart offices......</p>\r\n<p>If you want to receive and use our dataset, please refer to <a href=\"contact\">this link</a> and feel free to contact us.<p>\r\nhello world\r\n\r\n"
+	},
+	"contact": {
+		"page": "contact",
+		"tab_name": "DOO-RE - Contact",
+		"title": "Contact",
+		"desc": "",
+		"content": "<div style=\"margin:0% 17% 0% 17%\">\r\n\r\n<br><br>\r\n<h3>E-mail</h3>\r\nPlease send us an e-mail including the purpose of using this dataset. \r\n cdsnlab@gmail.com\r\n\r\n<br><br>\r\n<h3>Address</h3>\r\nCDSN Lab, Room 823, Building N1,<br>\r\nSchool of Computing,<br>\r\nKorea Advanced Institute of Science & Technology(KAIST),<br>\r\n291 Daehak-ro, Yuseong-gu,<br>\r\nDaejeon, Republic of Korea\r\n\r\n<br><br>\r\n<h3>Lab website</h3>\r\n<a href=\"http://cds.kaist.ac.kr/cdsn/\">\r\n    <img src=\"../static/images/cdsn_logo.jpg\"\r\n     alt=\"CDSN Lab logo\">\r\n</a>\r\n"
+	}
+}

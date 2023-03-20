@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block tab_name %} {{ data['tab_name'] }} {% endblock %}
+
+{% block add_feature %} 
+<a href="/{{ data['page'] }}">Edit</a>
+<a href="/logout">Logout</a>
+{% endblock %}
+
+{% block title %} {{ data['title'] }} {% endblock %}
+{% block desc %} {{ data['desc'] }} {% endblock %}
+
+{% block content %}
+
+
+<p id="show"></p>
+
+<script>
+    var content = `{{ data['content'] }}`;
+    parser = new DOMParser();
+    htmlDoc = parser.parseFromString(content, "text/html");
+    document.getElementById("show").innerHTML = htmlDoc.body.innerText;
+</script>
+
+
+
+
+{% endblock %}

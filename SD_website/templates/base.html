@@ -14,12 +14,21 @@
         <link rel="stylesheet" href={{ url_for('static', filename='css/main.css')}} />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		{% block head %}{% endblock %}
+		<style>
+			h1 { text-transform: none; }
+			h2 { text-transform: none; }
+			h3 { text-transform: none; }
+			h4 { text-transform: none; }
+			h5 { text-transform: none; }
+		</style>
 	</head>
 	<body>
 
 		<!-- Header -->
 			<header id="header">
-				<h1><a href="home">ESPAR</a></h1>
+				<h1><a href="home">DOO-RE</a></h1>
+				{% block add_feature %}{% endblock %}
 				<a href="#nav">Menu</a>
 			</header>
 
@@ -27,7 +36,7 @@
 			<nav id="nav">
 				<ul class="links">
 					<li><a href="home">About dataset</a></li>
-					<li><a href="contact">Contact us</a></li>
+					<li><a href="contact">Contact</a></li>
 				</ul>
 			</nav>
 
@@ -38,7 +47,7 @@
 
 					<header class="major special">
 						<h2>{% block title %}{% endblock %}</h2>
-                        <p>{% block desc %}{% endblock %}</p>
+                        <p style='text-transform: none'>{% block desc %}{% endblock %}</p>
 						<!-- <p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p> -->
 					</header>
                     {% block content %}{% endblock %}
